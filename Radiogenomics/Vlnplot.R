@@ -60,27 +60,6 @@ Idents(Combined) <- Combined$group
 library(patchwork)
 library(ggpubr)
 
-
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot.pdf"), height=4, width=6)
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot.pdf"), height=8, width=8)
-###pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_240216.pdf"), height=12, width=8)
-#VlnPlot(Combined, features = c('S100A4','HOXD9','MGST1'))
-#VlnPlot(Combined, features = c('PPP1R14A','SH3KBP1','FOXM1','SHKBP1','TCEAL2','MEG3'))
-#VlnPlot(Combined, features = c('PTGDS','ALPL'))
-###VlnPlot(Combined, features = c('ABCA1','EFNB2','EPHB3','APLP2','APOA1','C3','EFNA1','EFNB1','EPHA1','EPHA2','CXCL14','CXCR4','NTN4'))
-###dev.off()
-
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_pt0.pdf"), height=4, width=6)
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_pt0.pdf"), height=8, width=8)
-###pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_pt0_240216.pdf"), height=12, width=8)
-#VlnPlot(Combined, features = c('S100A4','HOXD9','MGST1'),pt.size=0)
-#VlnPlot(Combined, features = c('PPP1R14A','SH3KBP1','FOXM1','SHKBP1','TCEAL2','MEG3'),pt.size=0)
-#VlnPlot(Combined, features = c('PTGDS','ALPL'),pt.size=0)
-#VlnPlot(Combined, features = c('ABCA1','EFNB2','EPHB3','APLP2','APOA1','C3','EFNA1','EFNB1','EPHA1','EPHA2','CXCL14','CXCR4','NTN4'),pt.size=0)
-###VlnPlot(Combined, features = c('ABCA1','EFNB2','EPHB3','APLP2','APOA1','C3','EFNA1','EFNB1','EPHA1','EPHA2','CXCL14','CXCR4','NTN4'),pt.size=0) + stat_compare_means(comparisons = list(c("Case","Control")), method = "wilcox.test")
-###dev.off()
-
-
 #genes <- c('ABCA1','EFNB2','EPHB3','APLP2','APOA1','C3','EFNA1','EFNB1','EPHA1','EPHA2','CXCL14','CXCR4','NTN4')
 genes <- c('MGST1','PPP1R14A','SH3KBP1','FOXM1','TCEAL2','SHKBP1','MEG3','PTGDS','ALPL')
 vp_case1 <- function(gene_signature, file_name, test_sign){
@@ -99,10 +78,6 @@ gene_sig
 comparisons1 <- list(c("Case","Control"))
 vp_case1(gene_signature = gene_sig, file_name = paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_pt0_max3.5_240219"), test_sign = comparisons1)
 
-
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplot_with_stat.pdf"), height=4, width=6)
-#VlnPlot(Combined, features =c('S100A4','HOXD9','MGST1'),y.max=6) + stat_compare_means(comparisons = c("Case","Control"), method = "wilcox.test")
-#dev.off()
 
 #pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_vlnplotpt0_with_stat.pdf"), height=4, width=6)
 #VlnPlot(Combined, features =c('S100A4','HOXD9','MGST1'), pt.size = 0,y.max=6) + stat_compare_means(comparisons = list(c("Case","Control")), method = "wilcox.test")
