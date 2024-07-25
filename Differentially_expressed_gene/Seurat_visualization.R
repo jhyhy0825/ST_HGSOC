@@ -19,19 +19,19 @@ gene4 <- gene_list[28:length(gene_list)]
 
 pdf(paste0(inputdir,'Dotplot_221019_1.pdf'))
 #SpatialFeaturePlot(data, features=c("TP53","CD36","WFDC2","MUC16","CLDN4","COL1A1","VIM","FN1","POSTN"))
-#SpatialFeaturePlot(data, features=gene1)
+SpatialFeaturePlot(data, features=gene1)
 dev.off()
 
 pdf(paste0(inputdir,'Dotplot_221019_2.pdf'))
-#SpatialFeaturePlot(data, features=gene2)
+SpatialFeaturePlot(data, features=gene2)
 dev.off()
 
 pdf(paste0(inputdir,'Dotplot_221019_3.pdf'))
-#SpatialFeaturePlot(data, features=gene3)
+SpatialFeaturePlot(data, features=gene3)
 dev.off()
 
 pdf(paste0(inputdir,'Dotplot_221019_4.pdf'))
-#SpatialFeaturePlot(data, features=gene4)
+SpatialFeaturePlot(data, features=gene4)
 dev.off()
 
 
