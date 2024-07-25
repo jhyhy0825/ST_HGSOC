@@ -21,15 +21,10 @@ samples
 #length(samples)
 col <- data[2,]
 data <- read.table(file,header=F, skip=2)
-#head(data)
-#tail(data)
-#dim(data)
+
 colnames(data)<-col
 row.names(data)<-data$GeneID
 data = data[,-1]
-#head(data)
-#tail(data)
-#dim(data)
 
 ### DEG ###
 dge <- DGEList(counts=data, group=groups)
