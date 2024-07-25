@@ -1,54 +1,65 @@
 #! /usr/bin/env Rscript
+## Rscript /home/jhy/test/211027_edgeR/code/step1_edgeR_multi.R /home/jhy/test/211027_edgeR/result/ GSE155192_TPM_Ndufs4KO.txt
 
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/edgeR.R /home/jhy/spatial_transcriptomics/220905/result/seurat/combine/ /home/jhy/spatial_transcriptomics/220905/result/seurat/combine//image/bilaterality_ovary/ /home/jhy/spatial_transcriptomics/220905/result/seurat/combine//image/bilaterality_ovary/bilaterality_ovary.csv bilaterality_ovary 
+## Rscript /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/code/edgeR.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/presence_carcinomatosis_peritonei/ presence_carcinomatosis_peritonei_tpm.txt
 
-library(Seurat)
-library(ggplot2)
-library(patchwork)
-library(dplyr)
+library(edgeR)
 
 args = commandArgs(trailingOnly = TRUE)
-seuratdir <- args[1]
-inputdir <- args[2]
-samples <- args[3]
-image <- args[4]
+inputdir <- args[1]
+file <- paste0(inputdir,args[2])
+#files = list.files(path=inputdir, full.names=T, recursive=F, include.dirs=F)
+#files = files[grep(sample, files)]
 
-data10 <- readRDS(file = paste0(seuratdir,"/dimensional_reduction_dim.rds"))
+data <- read.table(file,header=F, nrow=2)
+#head(data)
+groups <- data[2,-1]
+groups
+#length(groups)
+samples <- data[1,-1]
+samples
+#length(samples)
+col <- data[2,]
+data <- read.table(file,header=F, skip=2)
+#head(data)
+#tail(data)
+#dim(data)
+colnames(data)<-col
+row.names(data)<-data$GeneID
+data = data[,-1]
+#head(data)
+#tail(data)
+#dim(data)
 
-data10
-head(data10)
+### DEG ###
+dge <- DGEList(counts=data, group=groups)
+#dge
+#dim(dge)
 
-samples <- read.table(samples,header=T,sep=',')
-samples$ids[samples$ids == "CPS_OV1"] <- "CPS_OV1RtOV3"
-samples$ids[samples$ids == "CPS_OV5"] <- "CPS_OV5LtOV4"
-samples$ids[samples$ids == "CPS_OV10"] <- "CPS_OV10RTOV4-1"
-samples$ids[samples$ids == "CPS_OV19"] <- "CPS_OV19_LtOV1"
-samples$ids[samples$ids == "CPS_OV20"] <- "CPS_OV20RtOV4"
-samples$ids[samples$ids == "CPS_OV24"] <- "CPS_OV24RTOV4"
-samples$ids[samples$ids == "CPS_OV34"] <- "CPS_OV34RtOV1"
-samples$ids[samples$ids == "CPS_OV71"] <- "CPS_OV71_1"
-Case <- subset(samples,samples$type == "Case")
-Case
-Case$ids
-Case <- subset(data10, subset = sample %in% Case$ids)
-Case
-Case$group <- 'Case'
-head(Case)
-Control <- subset(samples,samples$type == "Control")
-Control
-Control <- subset(data10, subset = sample %in% Control$ids)
-Control
-Control$group <- 'Control'
-head(Control)
+#dge$samples$group <- factor(dge$samples$group, levels = c("Case","Control"))
+dge$samples$group <- relevel(dge$samples$group, ref="Control")
+#dge$samples$group
 
-Combined <- merge(Case, Control)
-Combined
-head(Combined)
-tail(Combined)
+design <- model.matrix(~dge$samples$group)
+#design
+rownames(design) <- rownames(dge$samples)
+#design
+dge_dispersion <- estimateGLMCommonDisp(dge,design)
+#dge_dispersion
+dge_tagwise <- estimateGLMTagwiseDisp(dge_dispersion, design)
+#dge_tagwise
+fit <- glmFit(dge_tagwise,design,dispersion=dge_tagwise$tagwise.dispersion)
+#fit
+#lrt <- glmLRT(fit, coef=c(2,3,4))
+lrt <- glmLRT(fit)
+#lrt
+norm <- round(cpm(dge_tagwise,normalized.lib.sizes = T))
+## top10000
+#normExp <- merge(norm, topTags(lrt,n=10000), by.x="row.names", by.y="row.names")
+## all
+normExp <- merge(norm, topTags(lrt, n=nrow(data)), by.x="row.names", by.y="row.names")
+names(normExp)[1]
+normExp <- normExp[order(normExp$PValue),]
 
-Idents(Combined) <- Combined$group
-
-head(Combined$SCT@counts)
-
-
-
+outputfile <- paste0(inputdir,"edgeR_result_using_raw.txt")
+write.table(normExp, outputfile, row.names=FALSE, sep='\t')
