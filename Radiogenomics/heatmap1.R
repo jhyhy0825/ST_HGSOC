@@ -19,12 +19,8 @@ image <- args[4]
 region <-args[5]
 region2 <- args[6]
 
-#data10 <- readRDS(file = paste0(seuratdir,"/Cancer.rds"))
 data10 <- readRDS(file = paste0(seuratdir,"/",region2,".rds"))
 
-#Idents(data10)
-#Idents(data10) <- data10$orig.ident
-#Idents(data10)
 data10
 head(data10)
 #Case <- subset(data10, subset = sample=='CPS_OV10RTOV4-1' | sample=='CPS_OV5LtOV4' | sample=='CPS_OV20RtOV4'| sample=='CPS_OV24RTOV4' | sample=='CPS_OV18CDS1')
@@ -41,14 +37,12 @@ samples$ids[samples$ids == "CPS_OV71"] <- "CPS_OV71_1"
 Case <- subset(samples,samples$type == "Case")	  
 Case
 Case$ids
-#Case <- subset(data10, subset = sample %in% Case$ids)
 Case <- subset(data10, subset = orig.ident %in% Case$ids)
 Case
 Case$group <- 'Case'
 head(Case)
 Control <- subset(samples,samples$type == "Control")
 Control
-#Control <- subset(data10, subset = sample %in% Control$ids)
 Control <- subset(data10, subset = orig.ident %in% Control$ids)
 Control
 Control$group <- 'Control' 
@@ -61,24 +55,12 @@ tail(Combined)
 
 Idents(Combined) <- Combined$group
 
-
 Combined = ScaleData(Combined)
-###
 
 genes3 <- read.table(paste0(inputdir,image,'_case_vs_control_markers_log2FC0.25_adjP0.05_dim_',region,'region_231115.txt'),header=T,sep=' ')
 genes3 <- genes3 %>% top_n(n=100, wt=abs(avg_log2FC))
 genes3<- genes3 %>% arrange(desc(avg_log2FC))
 
-#pbmc.markers <- FindMarkers(object = Combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, test.use=method)
-#top50 <- markers %>% group_by(group) %>% top_n(n = 50, wt = avg_log2FC)
-#top50 <- markers %>% top_n(n = 50, wt = avg_log2FC)
-
-#pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_heatmap_log2FC1_adjP0.05.pdf"), height=12, width=6)
-#DoHeatmap(Combined, features=p2$gene)
-#DoHeatmap(Combined, features=rownames(genes2),group.by='group')
-#dev.off()
-
 pdf(file=paste0(inputdir,'/',image,"_case_vs_control_",region,"_heatmap_log2FC0.25_adjP0.05_top100.pdf"), height=15, width=6)
-#DoHeatmap(Combined, features=p3$gene)
 DoHeatmap(Combined, features=rownames(genes3),group.by='group')
 dev.off()
