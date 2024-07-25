@@ -1,13 +1,3 @@
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/bilaterality_ovary/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/bilaterality_ovary/ bilaterality_ovary /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
-
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/binary1_longest_diameter_ovary/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/binary1_longest_diameter_ovary/ binary1_longest_diameter_ovary /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
-
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/binary2_longest_diameter_ovary/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/binary2_longest_diameter_ovary/ binary2_longest_diameter_ovary /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
-
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/seeding_pattern/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/seeding_pattern/ seeding_pattern /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
-
-## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/seeding_paracolic_gutter/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/seeding_paracolic_gutter/ seeding_paracolic_gutter /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
-
 ## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/binary1_number_seeding_location/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/binary1_number_seeding_location/ binary1_number_seeding_location /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
 
 ## Rscript /home/jhy/spatial_transcriptomics/220905/code/image/GSEA.R /home/jhy/spatial_transcriptomics/TCIA/OV/TCGA-OV/DEG/peritoneal_disease/ /home/jhy/spatial_transcriptomics/220905/result/seurat/image/peritoneal_disease/ peritoneal_disease /home/jhy/spatial_transcriptomics/220905/result/seurat/image/Stroma.rds stroma
@@ -31,8 +21,6 @@ factor <- args[3]
 rds <- args[4]
 region <- args[5]
 
-#data1 <- read.table(paste0(inputdir1,"edgeR_result_with_gene_name.txt"), sep = '\t', header = TRUE)
-#head(data1)
 data1 <- read.table(paste0(inputdir2,factor,'_case_vs_control_markers_log2FC0.25_adjP0.05_dim_',region,'region_230919.txt'),sep=' ',header=T)
 data1$gene_name <- rownames(data1)
 
@@ -43,11 +31,6 @@ gs <- unique(gs)
 
 fgsea_sets <- m_df %>% split(x = .$gene_symbol, f = .$gs_name)
 
-#genes1 <- data1 %>%
-#	arrange(desc(logFC)) %>%
-#	dplyr::select(gene_name, logFC)
-#colnames(genes1) <- c('feature','logFC')
-#head(genes1)
 genes1 <- data1 %>%
 	arrange(desc(avg_log2FC)) %>%
 	dplyr::select(gene_name, avg_log2FC)
